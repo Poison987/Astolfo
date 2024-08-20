@@ -17,7 +17,7 @@ jobs:
         with:
           name: §6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip
           path: releases/§6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip
-          repo-token: ${{ secrets.GIT_TOKEN }}
+          repo-token: "${{ secrets.GIT_TOKEN }}"
           content-type: text/plain # Optional
       
       # Upload the .jar to Modrinth

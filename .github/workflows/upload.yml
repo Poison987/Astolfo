@@ -11,7 +11,7 @@ jobs:
       - uses: vimtor/action-zip@v1.2
         with:
           files: shaders
-          dest: "releases/Nwoof's Wynn Shader ${{ github.event.release.tag_name }}.zip"
+          dest: "releases/Nwoof's-Wynn-Shader-${{ github.event.release.tag_name }}.zip"
       # An optional step to also upload the `.jar` to the GitHub release assets
   github:
     name: Upload to Github

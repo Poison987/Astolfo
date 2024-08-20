@@ -22,7 +22,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
       # Upload the .jar to Modrinth
       - name: Upload to Modrinth
-        uses: dsx137/modrinth-release-action@main
+        uses: dsx137/modrinth-release-action@1.0.1
         env:
             MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         with:

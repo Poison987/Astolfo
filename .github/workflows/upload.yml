@@ -4,31 +4,23 @@ name: Maven Release
     types: [ published ]
 jobs:
   zip:
-    name: Zip Shader
+    name: Zip and Upload Shader
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: vimtor/action-zip@v1.2
+      - name: Zip Shader
+        uses: vimtor/action-zip@v1.2
         with:
           files: shaders
           dest: "Nwoofs-Wynn-Shader-${{ github.event.release.tag_name }}.zip"
       # An optional step to also upload the `.jar` to the GitHub release assets
-  github:
-    name: Upload to Github
-    runs-on: ubuntu-latest
-    steps:
       - name: Upload to Release
         uses: JasonEtco/upload-to-release@v0.1.1
         with:
           args: Nwoofs-Wynn-Shader-${{ github.event.release.tag_name }}.zip application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-      
       # Upload the .jar to Modrinth
-  modrinth:
-    name: Upload to Modrinth
-    runs-on: ubuntu-latest
-    steps:
       - name: Upload to Modrinth
         uses: cloudnode-pro/modrinth-publish@1.0.0
         with:

@@ -32,7 +32,7 @@ jobs:
             game_versions: 1.21:1.21.1
             version_number: ${{ github.event.release.tag_name }}
             files: |
-                ./shaders/*
+                "Nwoofs-Wynn-Shader-${{ github.event.release.tag_name }}.zip"
             dependencies: YL57xq9U:required, uCdwusMi:optional
             changelog: "${{ github.event.release.body }}"
             version_type: alpha # or beta, alpha

@@ -10,16 +10,15 @@ jobs:
       - uses: actions/checkout@v2
       - uses: vimtor/action-zip@v1.2
         with:
-          files: shaders/
+          files: shaders
           dest: "releases/§6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip"
       # An optional step to also upload the `.jar` to the GitHub release assets
-      - name: Upload to release
-        uses: JasonEtco/upload-to-release@master
+      - uses: Shopify/upload-to-release@v1
         with:
-          # Make sure that this matches the file name of your .jar
-          args: "releases/§6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip"
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          name: §6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip
+          path: releases/§6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          content-type: text/plain # Optional
       
       # Upload the .jar to Modrinth
       - name: Upload to Modrinth

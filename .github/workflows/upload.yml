@@ -22,10 +22,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
       # Upload the .jar to Modrinth
       - name: Upload to Modrinth
-        uses: cloudnode-pro/modrinth-publish@1.0.0
+        uses: dsx137/modrinth-release-action@main
+        env:
+            MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         with:
-          token: '${{ secrets.MODRINTH_TOKEN }}' # You need to create this secret in your repository settings
-          project: K8XDv70D # Replace with your project id/slug
-          file: "Nwoofs-Wynn-Shader-${{ github.event.release.tag_name }}.zip" # Make sure that this matches the file name of your .jar
-          changelog: '${{ github.event.release.body }}' # Copies the version changelog from the GitHub release notes
-          loaders: 'iris' # A list of your supported loaders
+            name: Nwoofs-Wynn-Shader-${{ github.event.release.tag_name }}.zip
+            project_id: K8XDv70D
+            loaders: iris
+            game_versions: 1.21:1.21.1
+            version_number: ${{ github.event.release.tag_name }}
+            files: |
+                Nwoofs-Wynn-Shader-${{ github.event.release.tag_name }}.zip
+            dependencies: YL57xq9U:required, uCdwusMi:optional
+            changelog: "${{ github.event.release.body }}"
+            version_type: alpha # or beta, alpha
+            featured: false
+            status: 'listed' # or archived, draft, unlisted, scheduled, unknown
+            requested_status: 'listed' # or archived, draft, unlisted
+            updatable: false # default true, means updating existing version
+            delete_old_files: false # default true

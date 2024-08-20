@@ -11,13 +11,13 @@ jobs:
       - uses: vimtor/action-zip@v1.2
         with:
           files: shaders
-          dest: releases/§6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip
+          dest: "releases/§6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip"
       # An optional step to also upload the `.jar` to the GitHub release assets
       - name: Upload to release
         uses: JasonEtco/upload-to-release@master
         with:
           # Make sure that this matches the file name of your .jar
-          args: releases/§6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip application/zip
+          args: "releases/§6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip"
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
       

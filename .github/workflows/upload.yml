@@ -3,8 +3,8 @@ name: Maven Release
   release:
     types: [ published ]
 jobs:
-  publish:
-    name: Zip and Upload Shader
+  zip:
+    name: Zip Shader
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,6 +13,10 @@ jobs:
           files: shaders
           dest: "releases/§6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip"
       # An optional step to also upload the `.jar` to the GitHub release assets
+  github:
+    name: Upload to Github
+    runs-on: ubuntu-latest
+    steps:
       - name: Upload to Release
         uses: JasonEtco/upload-to-release@v0.1.1
         with:
@@ -21,6 +25,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
       
       # Upload the .jar to Modrinth
+  modrinth:
+    name: Upload to Modrinth
+    runs-on: ubuntu-latest
+    steps:
       - name: Upload to Modrinth
         uses: cloudnode-pro/modrinth-publish@1.0.0
         with:

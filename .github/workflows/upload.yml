@@ -29,14 +29,3 @@ jobs:
           file: "Nwoofs-Wynn-Shader-${{ github.event.release.tag_name }}.zip" # Make sure that this matches the file name of your .jar
           changelog: '${{ github.event.release.body }}' # Copies the version changelog from the GitHub release notes
           loaders: 'iris' # A list of your supported loaders
-          dependencies: > 
-            [
-              {
-                "project-id": "YL57xq9U",
-                "dependency_type": "required"
-              },
-              {
-                "project-id": "uCdwusMi",
-                "dependency_type": "optional"
-              }
-            ]

@@ -1,0 +1,43 @@
+name: Maven Release
+'on':
+  release:
+    types: [ published ]
+jobs:
+  publish:
+    name: Zip and Upload Shader
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: vimtor/action-zip@v1.2
+        with:
+          files: shaders
+          dest: releases/§6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip
+      # An optional step to also upload the `.jar` to the GitHub release assets
+      - name: Upload to release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          # Make sure that this matches the file name of your .jar
+          args: releases/§6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip application/zip
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+      
+      # Upload the .jar to Modrinth
+      - name: Upload to Modrinth
+        uses: cloudnode-pro/modrinth-publish@1.0.0
+        with:
+          token: '${{ secrets.MODRINTH_TOKEN }}' # You need to create this secret in your repository settings
+          project: K8XDv70D # Replace with your project id/slug
+          file: "releases/§6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip" # Make sure that this matches the file name of your .jar
+          changelog: '${{ github.event.release.body }}' # Copies the version changelog from the GitHub release notes
+          loaders: 'iris' # A list of your supported loaders
+          dependencies: > 
+            [
+              {
+                "project-id": "YL57xq9U",
+                "dependency_type": "required"
+              },
+              {
+                "project-id": "uCdwusMi",
+                "dependency_type": "optional"
+              }
+            ]

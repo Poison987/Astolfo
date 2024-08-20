@@ -1,0 +1,147 @@
+option.ENTITY_SHADOWS=Entity Shadows
+option.ENTITY_SHADOWS.comment=Apply shadowmapping to entities. Can impact CPU and GPU performance significantly in areas with many mobs
+value.ENTITY_SHADOWS.false=Off
+value.ENTITY_SHADOWS.true=On
+
+option.SHADOWS_ENABLED=Enable Shadows
+option.SHADOWS_ENABLED.comment=Enables shadows. Will significantly improve GPU performance if off, but looks way worse
+
+option.SHADOW_RES=Shadow Resolution
+option.SHADOW_RES.comment=Quality of the shadowmapping. Significantly impacts VRAM usage
+value.SHADOW_RES.128=128px
+value.SHADOW_RES.256=256px
+value.SHADOW_RES.512=512px
+value.SHADOW_RES.1024=1024px
+value.SHADOW_RES.2048=2048px
+value.SHADOW_RES.4096=§aDefault
+value.SHADOW_RES.8192=8192px
+
+option.SHADOW_DIST=Shadow Distance
+option.SHADOW_DIST.comment=How far away shadows can be rendered. Significantly impacts GPU performance
+value.SHADOW_DIST.4=§a§l§o4 Chunks
+value.SHADOW_DIST.5=§a§l§o5 Chunks
+value.SHADOW_DIST.6=§a§l§o6 Chunks
+value.SHADOW_DIST.7=§a§l§o7 Chunks
+value.SHADOW_DIST.8=§a§l§o8 Chunks
+value.SHADOW_DIST.9=§a§l§o9 Chunks
+value.SHADOW_DIST.10=§a§l§o10 Chunks
+value.SHADOW_DIST.11=§e§l§o11 Chunks
+value.SHADOW_DIST.12=§e§l§o12 Chunks
+value.SHADOW_DIST.13=§e§l§o13 Chunks
+value.SHADOW_DIST.14=§e§l§o14 Chunks
+value.SHADOW_DIST.15=§e§l§o15 Chunks
+value.SHADOW_DIST.16=§6§l§o16 Chunks
+value.SHADOW_DIST.17=§6§l§o17 Chunks
+value.SHADOW_DIST.18=§6§l§o18 Chunks
+value.SHADOW_DIST.19=§6§l§o19 Chunks
+value.SHADOW_DIST.20=§c§l§o20 Chunks
+value.SHADOW_DIST.21=§c§l§o21 Chunks
+value.SHADOW_DIST.22=§c§l§o22 Chunks
+value.SHADOW_DIST.23=§c§l§o23 Chunks
+value.SHADOW_DIST.24=§c§l§o24 Chunks
+value.SHADOW_DIST.25=§4§k§l§oa §4§l§o25 Chunks §4§k§l§oa
+value.SHADOW_DIST.26=§4§k§l§oa §4§l§o26 Chunks §4§k§l§oa
+value.SHADOW_DIST.27=§4§k§l§oa §4§l§o27 Chunks §4§k§l§oa
+value.SHADOW_DIST.28=§4§k§l§oa §4§l§o28 Chunks §4§k§l§oa
+value.SHADOW_DIST.29=§4§k§l§oa §4§l§o29 Chunks §4§k§l§oa
+value.SHADOW_DIST.30=§4§k§l§oa §4§l§o30 Chunks §4§k§l§oa
+value.SHADOW_DIST.31=§4§k§l§oa §4§l§o31 Chunks §4§k§l§oa
+value.SHADOW_DIST.32=§4§k§l§oa §4§l§o32 Chunks §4§k§l§oa
+
+
+option.DAY_R=§cRed
+option.DAY_G=§aGreen
+option.DAY_B=§9Blue
+option.DAY_I=Intensity
+
+option.NIGHT_R=§cRed
+option.NIGHT_G=§aGreen
+option.NIGHT_B=§9Blue
+option.NIGHT_I=Intensity
+
+option.SUNSET_R=§cRed
+option.SUNSET_G=§aGreen
+option.SUNSET_B=§9Blue
+option.SUNSET_I=Intensity
+
+option.SKY_DAY_A_R=§cHorizon Red
+option.SKY_DAY_A_G=§aHorizon Green
+option.SKY_DAY_A_B=§9Horizon Blue
+
+option.SKY_DAY_B_R=§cStratosphere Red
+option.SKY_DAY_B_G=§aStratosphere Green
+option.SKY_DAY_B_B=§9Stratosphere Blue
+
+option.SKY_NIGHT_A_R=§cHorizon Red
+option.SKY_NIGHT_A_G=§aHorizon Green
+option.SKY_NIGHT_A_B=§9Horizon Blue
+
+option.SKY_NIGHT_B_R=§cStratosphere Red
+option.SKY_NIGHT_B_G=§aStratosphere Green
+option.SKY_NIGHT_B_B=§9Stratosphere Blue
+
+option.SKY_SUNSET_A_R=§cHorizon Red
+option.SKY_SUNSET_A_G=§aHorizon Green
+option.SKY_SUNSET_A_B=§9Horizon Blue
+
+option.SKY_SUNSET_B_R=§cStratosphere Red
+option.SKY_SUNSET_B_G=§aStratosphere Green
+option.SKY_SUNSET_B_B=§9Stratosphere Blue
+
+
+option.FOG_DAY_R=§cRed
+option.FOG_DAY_G=§aGreen
+option.FOG_DAY_B=§9Blue
+option.FOG_DAY_DIST_MIN=Minimum Fog Distance
+option.FOG_DAY_DIST_MAX=Maximum Fog Distance
+
+option.FOG_NIGHT_R=§cRed
+option.FOG_NIGHT_G=§aGreen
+option.FOG_NIGHT_B=§9Blue
+option.FOG_NIGHT_DIST_MIN=Minimum Fog Distance
+option.FOG_NIGHT_DIST_MAX=Maximum Fog Distance
+
+option.FOG_SUNSET_R=§cRed
+option.FOG_SUNSET_G=§aGreen
+option.FOG_SUNSET_B=§9Blue
+option.FOG_SUNSET_DIST_MIN=Minimum Fog Distance
+option.FOG_SUNSET_DIST_MAX=Maximum Fog Distance
+
+option.MIN_LIGHT=Minimum Light
+value.MIN_LIGHT.0.0f=Dark
+
+option.MAX_LIGHT=Maximum Light
+value.MAX_LIGHT.4.1f=Unlimited
+
+option.BLOOM=Bloom
+option.BLOOM.comment=Makes light sources leak into surrounding objects. Low-moderate GPU performance impact
+
+screen.PERFORMANCE=Performance
+
+screen.SKY = Sky
+screen.ATMOSPHERE_COLORS = Atmosphere Colors
+screen.ATMOSPHERE_DAY = Day
+screen.ATMOSPHERE_NIGHT = Night
+screen.ATMOSPHERE_SUNSET = Sunrise/Sunset
+
+screen.SKY_COLORS = Sky Colors
+screen.SKY_DAY = Day
+screen.SKY_NIGHT = Night
+screen.SKY_SUNSET = Sunrise/Sunset
+
+screen.FOG = Fog
+screen.FOG_DAY = Day
+screen.FOG_NIGHT = Night
+screen.FOG_SUNSET = Sunrise/Sunset
+
+screen.LIGHTING=Lighting
+
+screen.CAMERA = Camera
+
+profile.TOASTER=Toaster
+profile.POTATO=Potato
+profile.LOW=Low
+profile.MEDIUM=Medium
+profile.HIGH=High
+profile.ULTRA=Ultra
+profile.CINEMATIC=Cinematic

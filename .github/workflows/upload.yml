@@ -13,7 +13,7 @@ jobs:
           files: shaders
           dest: "releases/§6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip"
       # An optional step to also upload the `.jar` to the GitHub release assets
-      - uses: Shopify/upload-to-release@v1
+      - uses: Shopify/upload-to-release@v2.0.0
         with:
           name: §6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip
           path: releases/§6§l§k~§r §9§lNwoof's §a§lWynn §9§lShader §4§l${{ github.event.release.tag_name }} §6§l§k~.zip

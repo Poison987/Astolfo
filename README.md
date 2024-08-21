@@ -3,7 +3,7 @@ Are you looking to play Wynncraft with shaders, but don't want to compromise on 
 
 **Current Features**
 - Shadowmapping with Adjustable Map Resolution and Maximum Distance
-- 16 Sample Bloom Effect
+- Bloom Effect with Adjustable Sample Rate
 - Scene-Aware Colored Lighting
 - Custom Water with Light Refraction
 - Customizable Sky/Fog/Atmosphere Colors

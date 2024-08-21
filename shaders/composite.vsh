@@ -10,10 +10,13 @@ varying vec2 LightmapCoords;
 
 in ivec2 vaUV2;
 
+out vec3 viewSpaceFragPosition;
+
 uniform sampler2D noise;
 
 void main() {
     gl_Position = ftransform();
+    viewSpaceFragPosition = (gl_ModelViewMatrix * gl_Vertex).xyz;
     LightmapCoords = vaUV2;
     float timeOfDay = mod(worldTime,24000);
     quadTime = timeOfDay;

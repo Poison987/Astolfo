@@ -116,6 +116,13 @@ value.MAX_LIGHT.4.1f=Unlimited
 option.BLOOM=Bloom
 option.BLOOM.comment=Makes light sources leak into surrounding objects. Low-moderate GPU performance impact
 
+option.BLOOM_QUALITY=Bloom Quality
+option.BLOOM_QUALITY.comment=Sample count for Bloom effect. Medium GPU performance impact
+suffix.BLOOM_QUALITY=§r Samples
+
+option.BLOOM_INTENSITY=Bloom Intensity
+option.BLOOM_INTENSITY.comment=Brightness of Bloom effect
+
 screen.PERFORMANCE=Performance
 
 screen.SKY = Sky

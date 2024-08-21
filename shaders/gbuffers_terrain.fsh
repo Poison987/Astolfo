@@ -11,6 +11,8 @@ uniform sampler2D lightmap;
 
 attribute vec4 mc_Entity;
 
+in vec3 viewSpaceFragPosition;
+
 /* DRAWBUFFERS:0123*/
 
 void main() {
@@ -29,8 +31,11 @@ void main() {
 
     albedo.xyz = pow(albedo.xyz, vec3(1/2.2));
 
+    float distanceFromCamera = distance(vec3(0), viewSpaceFragPosition);
+
     gl_FragData[0] = albedo;
     gl_FragData[1] = vec4(Normal * 0.5 + 0.5f, 1.0f);
     gl_FragData[2] = vec4(LightmapCoords, 0f, 1.0f);
     //gl_FragData[3] = vec4(LightmapCoords, 0.0f, 1.0f);
+    gl_FragData[3] = vec4(distanceFromCamera);
 }

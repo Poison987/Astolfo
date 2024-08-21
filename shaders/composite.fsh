@@ -29,6 +29,10 @@
 
 #define BLOOM
 
+#define BLOOM_QUALITY 48 // [4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64]
+#define BLOOM_INTENSITY 1.0f // [0.5f 0.6f 0.7f 0.8f 0.9f 1.0f 1.1f 1.2f 1.3f 1.4f 1.5f]
+//#define BLOOM_THRESHOLD 0.7f // [0.0f 0.1f 0.2f 0.3f 0.4f 0.5f 0.6f 0.7f 0.8f 0.9f 1.0f 1.1f 1.2f 1.3f 1.4f 1.5f 1.6f 1.7f 1.8f 1.9f 2.0f]
+
 #define MIN_LIGHT 0.05f // [0.0f 0.05f 0.1f 0.15f 0.2f 0.25f 0.3f 0.35f 0.4f 0.45f 0.5f]
 
 #define MAX_LIGHT 1.5f // [1.0f 1.1f 1.2f 1.3f 1.4f 1.5f 1.6f 1.7f 1.8f 1.9f 2.0f 2.1f 2.2f 2.3f 2.4f 2.5f 2.6f 2.7f 2.8f 2.9f 3.0f 3.1f 3.2f 3.3f 3.4f 3.5f 3.6f 3.7f 3.8f 3.9f 4.0f 4.1f]
@@ -64,6 +68,9 @@ uniform mat4 gbufferModelViewInverse;
 uniform mat4 shadowModelView;
 uniform mat4 shadowProjection;
 
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+
 uniform int worldTime;
 uniform int frameCounter;
 uniform float frameTime;
@@ -86,7 +93,7 @@ const int shadowMapResolution = SHADOW_RES;
 const ivec3 voxelVolumeSize = ivec3(1,0.5, 1);
 float effectiveACLdistance = min(1, SHADOW_DIST * 2.0);
 
-float maxBlindnessDarkness = 0;
+uniform float maxBlindnessDarkness;
 
 const int ShadowSamplesPerSize = 2 * SHADOW_SAMPLES + 1;
 const int TotalSamples = ShadowSamplesPerSize * ShadowSamplesPerSize;
@@ -95,6 +102,10 @@ varying vec2 LightmapCoords;
 attribute vec4 mc_Entity;
 
 uniform bool isBiomeEnd;
+
+in vec3 vaPosition;
+
+in vec3 viewSpaceFragPosition;
 
 float AdjustLightmapTorch(in float torch) {
     const float K = 2.0f;
@@ -230,7 +241,21 @@ vec3 bloom() {
     /*if(abs(sum.r - sum.g) > 0.25) {
         return GetLightmapColor(texture2D(colortex2, TexCoords).rg);
     }*/
-    sum += GetLightmapColor(texture2D(colortex2, vec2(TexCoords.x - 8.0 * blur * hstep, TexCoords.y - 8.0 * blur * hstep)).rg) * 0.0162162162;
+
+    for(int i = 0; i < BLOOM_QUALITY/2; i++) {
+        float sampleDepth = mix(0.0162162162,0.985135135,float(i)/(BLOOM_QUALITY/2));
+        sum += GetLightmapColor(texture2D(colortex2, vec2(TexCoords.x - (float(i)/BLOOM_QUALITY) * radius * 4f * blur * hstep, TexCoords.y - (float(i)/BLOOM_QUALITY) * radius * 4f * blur * hstep)).rg) * sampleDepth;
+    }
+
+    for(int i = 0; i < BLOOM_QUALITY/2; i++) {
+        float sampleDepth = mix(0.0162162162,0.985135135,float(i)/(BLOOM_QUALITY/2));
+        sum += GetLightmapColor(texture2D(colortex2, vec2(TexCoords.x + (float(i)/BLOOM_QUALITY) * radius * 4f * blur * hstep, TexCoords.y + (float(i)/BLOOM_QUALITY) * radius * 4f * blur * hstep)).rg) * sampleDepth;
+    }
+
+    sum /= BLOOM_QUALITY/8;
+    sum *= BLOOM_INTENSITY;
+
+    /*sum += GetLightmapColor(texture2D(colortex2, vec2(TexCoords.x - 8.0 * blur * hstep, TexCoords.y - 8.0 * blur * hstep)).rg) * 0.0162162162;
     sum += GetLightmapColor(texture2D(colortex2, vec2(TexCoords.x - 7.0 * blur * hstep, TexCoords.y - 7.0 * blur * hstep)).rg) * 0.0540540541;
     sum += GetLightmapColor(texture2D(colortex2, vec2(TexCoords.x - 6.0 * blur * hstep, TexCoords.y - 6.0 * blur * hstep)).rg) * 0.1216216216;
     sum += GetLightmapColor(texture2D(colortex2, vec2(TexCoords.x - 5.0 * blur * hstep, TexCoords.y - 5.0 * blur * hstep)).rg) * 0.1945945946;
@@ -246,7 +271,7 @@ vec3 bloom() {
     sum += GetLightmapColor(texture2D(colortex2, vec2(TexCoords.x + 4.0 * blur * hstep, TexCoords.y + 1.0 * blur * hstep)).rg) * 0.389189189;
     sum += GetLightmapColor(texture2D(colortex2, vec2(TexCoords.x + 3.0 * blur * hstep, TexCoords.y + 2.0 * blur * hstep)).rg) * 0.583783784;
     sum += GetLightmapColor(texture2D(colortex2, vec2(TexCoords.x + 2.0 * blur * hstep, TexCoords.y + 3.0 * blur * hstep)).rg) * 0.875675676;
-    sum += GetLightmapColor(texture2D(colortex2, vec2(TexCoords.x + 1.0 * blur * hstep, TexCoords.y + 4.0 * blur * hstep)).rg) * 0.985135135;
+    sum += GetLightmapColor(texture2D(colortex2, vec2(TexCoords.x + 1.0 * blur * hstep, TexCoords.y + 4.0 * blur * hstep)).rg) * 0.985135135;*/
 
     /*if(dot(sum, vec3(0.333)) > 2) {
         sum *= mix(vec3(2),vec3(0.5),clamp(dot(sum, vec3(0.333)),0,1.2));
@@ -434,6 +459,13 @@ void main() {
     //Diffuse *= currentColor;
 
     if(Depth == 1.0f){
+        /*float distanceFromCamera = distance(vec3(0), viewSpaceFragPosition);
+
+        float maxBlindnessDistance = 30;
+        float minBlindnessDistance = 20;
+
+        float blindnessBlendValue = clamp((distanceFromCamera - minBlindnessDistance) / (maxBlindnessDistance - minBlindnessDistance),0,1);*/
+        
         gl_FragData[0] = vec4(Albedo * currentColor, 1.0f);
         return;
     }
@@ -444,6 +476,9 @@ void main() {
     //vec3 Lightmap = bloom();
     #ifdef BLOOM
         LightmapColor = bloom();
+        /*if(dot(LightmapColor,vec3(0.333f)) < BLOOM_THRESHOLD) {
+            LightmapColor = GetLightmapColor(texture2D(colortex2, TexCoords).rg);
+        }*/
     #else
         LightmapColor = GetLightmapColor(texture2D(colortex2, TexCoords).rg);
     #endif
@@ -495,6 +530,17 @@ void main() {
         Diffuse.xyz = mix(unreal(Diffuse.xyz),aces(Diffuse.xyz),0.75);
     }
 
+    //vec3 worldSpaceVertexPosition = cameraPosition + (gbufferModelViewInverse * projectionMatrix * modelViewMatrix * vec4(vaPosition,1)).xyz;
+    
+    float distanceFromCamera = distance(vec3(0), viewSpaceFragPosition);
+
+    float maxBlindnessDistance = 30;
+    float minBlindnessDistance = 20;
+
+    float blindnessBlendValue = clamp((distanceFromCamera - minBlindnessDistance) / (maxBlindnessDistance - minBlindnessDistance),0,1);
+
+    //Diffuse.xyz = mix(Diffuse.xyz,vec3(0),blindnessBlendValue);
+    
     /*if(isLiquidEmerald > 0.0) {
         Diffuse *= vec3(1);
     }*/

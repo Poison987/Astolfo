@@ -11,10 +11,14 @@ varying vec4 Color;
 
 varying vec2 LightmapCoords;
 
+out vec3 viewSpaceFragPosition;
+
 void main() {
     gl_Position = ftransform();
         
     TexCoords = gl_MultiTexCoord0.st;
+
+    viewSpaceFragPosition = (gl_ModelViewMatrix * gl_Vertex).xyz;
 
     LightmapCoords = mat2(gl_TextureMatrix[1]) * gl_MultiTexCoord1.st;
 

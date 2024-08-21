@@ -11,7 +11,7 @@ jobs:
       - name: Zip Shader
         uses: montodur/action-zip@v1.0.0
         with:
-          args: zip "Nwoofs-Wynn-Shader-${{ github.event.release.tag_name }}.zip" -x "./.git/*" "./.github/*"
+          args: zip -r "Nwoofs-Wynn-Shader-${{ github.event.release.tag_name }}.zip" -x ".git/*" ".github/*"
       # An optional step to also upload the `.jar` to the GitHub release assets
       - name: Upload to Release
         uses: JasonEtco/upload-to-release@v0.1.1

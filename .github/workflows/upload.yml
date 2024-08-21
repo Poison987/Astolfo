@@ -13,6 +13,7 @@ jobs:
         with:
           files: ./
           dest: "Nwoofs-Wynn-Shader-${{ github.event.release.tag_name }}.zip"
+          args: -x "./.git" "./.github"
       # An optional step to also upload the `.jar` to the GitHub release assets
       - name: Upload to Release
         uses: JasonEtco/upload-to-release@v0.1.1

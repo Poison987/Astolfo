@@ -142,13 +142,13 @@ void main() {
         baseColorB = currentColorB;
     }*/
 
-    float dayNightLerp = clamp(quadTime/11500,0,1);
-    float sunsetLerp = clamp(quadTime/500,0,1);
+    float dayNightLerp = clamp(quadTime/250,0,1);
+    float sunsetLerp = clamp((quadTime - 250)/250,0,1);
 
     if(worldTime > 250 && worldTime <= 11750) {
         //baseOutputColorModifier = vec3(DAY_I);
-        currentColorA = dayColorA;//mix(baseColorA,dayColorA,dayNightLerp);
-        currentColorB = dayColorB;//mix(baseColorB,dayColorB,dayNightLerp);
+        currentColorA = mix(transitionColorA,dayColorA,dayNightLerp);//mix(baseColorA,dayColorA,dayNightLerp);
+        currentColorB = mix(transitionColorB,dayColorB,dayNightLerp);//mix(baseColorB,dayColorB,dayNightLerp);
         //outputColor = mix(baseOutputColor, baseOutputColor * baseOutputColorModifier, mod(worldTime/6000f,2f));
         
     } else if(worldTime > 11750 && worldTime <= 12250) {
@@ -156,8 +156,8 @@ void main() {
         currentColorB = mix(dayColorB, transitionColorB, sunsetLerp);
     } else if((worldTime > 12250 && worldTime <= 23750)) {
         //baseOutputColorModifier = vec3(NIGHT_I * 0.4f);
-        currentColorA = nightColorA;//mix(baseColorA, nightColorA, dayNightLerp);
-        currentColorB = nightColorB;//mix(baseColorB, nightColorB, dayNightLerp);
+        currentColorA = mix(transitionColorA,nightColorA,dayNightLerp);//mix(baseColorA, nightColorA, dayNightLerp);
+        currentColorB = mix(transitionColorB,nightColorB,dayNightLerp);//mix(baseColorB, nightColorB, dayNightLerp);
         //outputColor = mix(baseOutputColor, baseOutputColor * baseOutputColorModifier,mod(worldTime/6000f,2f));
     } else if(worldTime > 23750 || worldTime <= 250) {
         //baseOutputColorModifier = vec3(SUNSET_I);

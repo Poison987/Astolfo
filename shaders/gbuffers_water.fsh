@@ -61,7 +61,7 @@ void main() {
 
     if(isWater < 0.1f && isWaterBlock == 1) {
         albedo.xyz = mix(vec3(0.0f,0.33f,0.55f),vec3(1.0f,1.0f,1.0f),pow(finalNoise.x,5));
-        albedo.a = 0.5f;//mix(0.5f,1f,pow(finalNoise.x,5));
+        albedo.a = 0.0f;//mix(0.5f,1f,pow(finalNoise.x,5));
         Lightmap = vec4(LightmapCoords.x + Normal.x, LightmapCoords.x + noiseMap.y, LightmapCoords.y + noiseMap.z, 1.0f);
     } else {
         albedo = texture2D(colortex0, TexCoords);

@@ -37,6 +37,9 @@
 
 #define MAX_LIGHT 1.5f // [1.0f 1.1f 1.2f 1.3f 1.4f 1.5f 1.6f 1.7f 1.8f 1.9f 2.0f 2.1f 2.2f 2.3f 2.4f 2.5f 2.6f 2.7f 2.8f 2.9f 3.0f 3.1f 3.2f 3.3f 3.4f 3.5f 3.6f 3.7f 3.8f 3.9f 4.0f 4.1f]
 
+#define WATER_REFRACTION
+#define WATER_FOAM
+
 varying vec2 TexCoords;
 varying float timePhase;
 varying float quadTime;
@@ -83,6 +86,8 @@ uniform float viewWidth;
 uniform float viewHeight;
 
 uniform vec3 cameraPosition;
+
+uniform float blindness;
 
 const float sunPathRotation = -40.0f;
 
@@ -392,14 +397,25 @@ void main() {
     vec2 TexCoords2 = TexCoords;
     float Depth = texture2D(depthtex0, TexCoords).r;
     float Depth2 = texture2D(depthtex1, TexCoords).r;
+    vec3 Albedo;
     if(Depth != Depth2 && waterTest > 0) {
-        vec4 noiseMap = texture2D(noise, TexCoords + sin(TexCoords.y*32f + ((frameCounter)/90f)*0.05f) * 0.001f);
-        vec4 noiseMap2 = texture2D(noise, TexCoords - sin(TexCoords.y*16f + ((frameCounter)/90f)*0.05f) * 0.001f);
-        vec4 finalNoise = mix(noiseMap,noiseMap2,0.5f);
+        #ifdef WATER_REFRACTION
+            vec4 noiseMap = texture2D(noise, TexCoords + sin(TexCoords.y*32f + ((frameCounter)/90f)*0.05f) * 0.001f);
+            vec4 noiseMap2 = texture2D(noise, TexCoords - sin(TexCoords.y*16f + ((frameCounter)/90f)*0.05f) * 0.001f);
+            vec4 finalNoise = mix(noiseMap,noiseMap2,0.5f);
 
-        TexCoords2 += finalNoise.xy * vec2(0.125f);
+            TexCoords2 += finalNoise.xy * vec2(0.125f);
+        #endif
+
+        Albedo = pow(mix(texture2D(colortex0, TexCoords2).rgb,vec3(0.0f,0.33f,0.55f),clamp((0.5 - (Depth - Depth2)) * 0.5,0,1)), vec3(2.2f));
+        #ifdef WATER_FOAM
+            if(abs(Depth - Depth2) < 0.0005f) {
+                Albedo = mix(Albedo, vec3(1.0f), clamp(1 - abs(Depth - Depth2),0f,1));
+            }
+        #endif
+    } else {
+        Albedo = pow(texture2D(colortex0, TexCoords2).rgb, vec3(2.2f));
     }
-    vec3 Albedo = pow(texture2D(colortex0, TexCoords2).rgb, vec3(2.2f));
     vec3 Normal = normalize(texture2D(colortex1, TexCoords2).rgb * 2.0f -1.0f);
 
     /*if(Depth != Depth2 && waterTest > 0) {
@@ -466,6 +482,8 @@ void main() {
 
         float blindnessBlendValue = clamp((distanceFromCamera - minBlindnessDistance) / (maxBlindnessDistance - minBlindnessDistance),0,1);*/
         
+        Diffuse.xyz = mix(Diffuse.xyz, vec3(0), blindness);
+
         gl_FragData[0] = vec4(Albedo * currentColor, 1.0f);
         return;
     }
@@ -538,6 +556,8 @@ void main() {
     float minBlindnessDistance = 20;
 
     float blindnessBlendValue = clamp((distanceFromCamera - minBlindnessDistance) / (maxBlindnessDistance - minBlindnessDistance),0,1);
+    
+    //Diffuse.xyz = mix(Diffuse.xyz, vec3(0), blindness);
 
     //Diffuse.xyz = mix(Diffuse.xyz,vec3(0),blindnessBlendValue);
     

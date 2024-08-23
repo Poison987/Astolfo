@@ -71,6 +71,8 @@ uniform vec3 skyColor;
 
 uniform bool isBiomeEnd;
 
+uniform float blindness;
+
 in vec4 starData;
 
 float fogify(float x, float w) {
@@ -173,7 +175,7 @@ void main() {
         vec3 pos = screenToView(vec3(gl_FragCoord.xy / vec2(viewWidth, viewHeight), 1.0));
         //float upDot = dot(pos, gbufferModelView[1].xyz);
         //gl_FragData[0] = vec4(upDot);
-        outputColor = vec4(pow(calcSkyColor(normalize(pos), currentColorA, currentColorB),vec3(1/2.2)),1.0);
+        outputColor = vec4(mix(pow(calcSkyColor(normalize(pos), currentColorA, currentColorB),vec3(1/2.2)),vec3(0),blindness),1.0);
         //discard;
     }
 

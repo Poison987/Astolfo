@@ -205,7 +205,7 @@ void main() {
     if(isWater < 0.1f) {
         albedo.xyz = mix(vec3(0.0f,0.33f,0.55f),vec3(1.0f,1.0f,1.0f), physics_waveData.foam);
         //albedo.a = mix(0.5f, 1.0f, depth.w);
-        albedo.a = mix(0.5f, 1.0f, physics_waveData.foam);
+        albedo.a = mix(0.0f, 1.0f, physics_waveData.foam);
     }
 
     //vec4 normalDefine = vec4(noiseMap.xyz * 0.5 + 0.5f, 1.0f);

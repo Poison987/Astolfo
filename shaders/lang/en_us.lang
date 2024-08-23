@@ -123,6 +123,9 @@ suffix.BLOOM_QUALITY=§r Samples
 option.BLOOM_INTENSITY=Bloom Intensity
 option.BLOOM_INTENSITY.comment=Brightness of Bloom effect
 
+option.WATER_REFRACTION=Water Refraction
+option.WATER_FOAM=Water Foam (§cExperimental§r)
+
 screen.PERFORMANCE=Performance
 
 screen.SKY = Sky
@@ -142,6 +145,8 @@ screen.FOG_NIGHT = Night
 screen.FOG_SUNSET = Sunrise/Sunset
 
 screen.LIGHTING=Lighting
+
+screen.WATER=Water
 
 screen.CAMERA = Camera
 

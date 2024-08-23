@@ -56,6 +56,8 @@ uniform mat4 gbufferProjectionInverse;
 uniform mat4 gbufferProjection;
 uniform mat4 gbufferModelViewInverse;
 
+uniform float blindness;
+
 uniform bool isBiomeEnd;
 
 /* DRAWBUFFERS:026 */
@@ -190,6 +192,8 @@ void main() {
     if(!isBiomeEnd) {
         outputColor.xyz = mix(outputColor,lightColor,0.125f);
     }
+
+    outputColor.xyz = mix(outputColor.xyz, vec3(0), blindness);
 
     /*if(timePhase < 3 && timePhase > 1) {
         outputColor.xyz *= vec3(0.75f);

@@ -3,16 +3,23 @@
 #define DISTANT_HORIZONS
 
 uniform mat4 dhProjection;
+uniform mat4 gbufferModelViewInverse;
 
 out vec4 blockColor;
 out vec2 lightmapCoords;
 out vec3 viewSpaceFragPosition;
+
+out vec3 playerPos;
+
+out float isWaterBlock;
 
 varying float timePhase;
 varying float quadTime;
 uniform int worldTime;
 uniform int frameCounter;
 uniform float frameTime;
+
+attribute vec4 mc_Entity;
 
 void main() {
     blockColor = gl_Color;
@@ -39,5 +46,14 @@ void main() {
         timePhase = 3;
         quadTime -= 23250;
     }
+
+    isWaterBlock = 0f;
+	
+	if(mc_Entity.x == 8.0 && mc_Entity.x != 10002) {
+        isWaterBlock = 1f;
+    }
+
+    playerPos = (gbufferModelViewInverse * gl_ModelViewMatrix * gl_Vertex).xyz;
+
     gl_Position = ftransform();
 }

@@ -398,7 +398,7 @@ void main() {
     float Depth = texture2D(depthtex0, TexCoords).r;
     float Depth2 = texture2D(depthtex1, TexCoords).r;
     vec3 Albedo;
-    if(Depth != Depth2 && waterTest > 0) {
+    if(waterTest > 0) {
         #ifdef WATER_REFRACTION
             vec4 noiseMap = texture2D(noise, TexCoords + sin(TexCoords.y*32f + ((frameCounter)/90f)*0.05f) * 0.001f);
             vec4 noiseMap2 = texture2D(noise, TexCoords - sin(TexCoords.y*16f + ((frameCounter)/90f)*0.05f) * 0.001f);

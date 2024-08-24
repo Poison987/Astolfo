@@ -1,4 +1,5 @@
 #version 460 compatibility
+#include "lib/commonFunctions.glsl"
 
 #define DISTANT_HORIZONS
 #define DAY_R 1.0f // [0.5f 0.6f 0.7f 0.8f 0.9f 1.0f 1.1f 1.2f 1.3f 1.4f 1.5f]
@@ -40,11 +41,14 @@
 
 uniform sampler2D lightmap;
 uniform sampler2D depthtex0;
+uniform sampler2D depthtex1;
 uniform float viewWidth;
 uniform float viewHeight;
 uniform vec3 fogColor;
 
-uniform sampler2D noise;
+uniform sampler2D noises;
+
+uniform sampler2D colortex0;
 
 varying float timePhase;
 varying float quadTime;
@@ -60,13 +64,29 @@ uniform float blindness;
 
 uniform bool isBiomeEnd;
 
-/* DRAWBUFFERS:026 */
+uniform vec3 cameraPosition;
+
+/* DRAWBUFFERS:0265 */
 layout(location = 0) out vec4 outColor0;
 layout(location = 1) out vec4 outColor2;
+layout(location = 3) out vec4 isWater;
 
 in vec4 blockColor;
 in vec2 lightmapCoords;
 in vec3 viewSpaceFragPosition;
+
+in vec3 playerPos;
+
+in float isWaterBlock;
+
+vec3 aces(vec3 x) {
+  float a = 2.51;
+  float b = 0.03;
+  float c = 2.43;
+  float d = 0.59;
+  float e = 0.14;
+  return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+}
 
 vec3 unreal(vec3 x) {
   return x / (x + 0.155) * 1.019;
@@ -83,6 +103,17 @@ vec3 screenToWorld(vec3 screenPos) {
     vec4 tmp = gbufferProjectionInverse * ndcPos;
     tmp = gbufferModelViewInverse * tmp;
     return tmp.xyz / tmp.w;
+}
+
+float Noise3D(vec3 p) {
+    p.z = fract(p.z) * 128.0;
+    float iz = floor(p.z);
+    float fz = fract(p.z);
+    vec2 a_off = vec2(23.0, 29.0) * (iz) / 128.0;
+    vec2 b_off = vec2(23.0, 29.0) * (iz + 1.0) / 128.0;
+    float a = texture2D(noises, p.xy + a_off).r;
+    float b = texture2D(noises, p.xy + b_off).r;
+    return mix(a, b, fz);
 }
 
 void main() {
@@ -145,7 +176,7 @@ void main() {
         baseFogColor = currentFogColor;
     }
 
-    vec4 noiseMap = texture2D(noise, screenToView(vec3(gl_FragCoord.xy / vec2(viewWidth, viewHeight),1.0)).yx * 50);
+    vec4 noiseMap = texture2D(noises, screenToView(vec3(gl_FragCoord.xy / vec2(viewWidth, viewHeight),1.0)).yx * 50);
 
     float dayNightLerp = clamp(quadTime/11500,0,1);
     float sunsetLerp = clamp(quadTime/500,0,1);
@@ -180,8 +211,25 @@ void main() {
         maxFogDistance = mix(baseMaxFogDistance, FOG_SUNSET_DIST_MAX * 1750, sunsetLerp);
         currentFogColor = mix(fogNightColor, fogSunsetColor, sunsetLerp);
     }
+
+    if(dot(outputColor.xyz, vec3(0.333)) > 0.9f) {
+        outputColor.xyz = vec3(0.6);
+    }
+
+    vec3 noisePos = floor((playerPos + cameraPosition) * 4.0 + 0.001) / 32.0;
     
-    outputColor.xyz -= (1 - clamp(lightmapCoords.g,MIN_LIGHT,MAX_LIGHT)) * lightColor;
+    float noiseTexture = Noise3D(noisePos);
+    
+    float noiseFactor = max0(1.0 - 0.3 * dot(outputColor, outputColor));
+    
+    outputColor.rgb *= pow(noiseTexture, 0.6 * noiseFactor);
+
+    //outputColor = mix(outputColor.xyz, vec3(dot(outputColor.xyz, vec3(0.333))), -dot(outputColor.xyz, vec3(0.333)));
+
+    //outputColor *= vec3(noiseAmount);
+
+    outputColor.xyz = mix(outputColor, outputColor * 0.03125f, (1 - clamp(lightmapCoords.g,MIN_LIGHT,MAX_LIGHT)) * lightColor);
+    //outputColor.xyz -= (1 - clamp(lightmapCoords.g,MIN_LIGHT,MAX_LIGHT)) * lightColor;
     /*if(lightmapCoords.g < MIN_LIGHT || lightmapCoords.g > MAX_LIGHT) {
         outputColor.xyz = clamp(outputColor.xyz, currentColor * MIN_LIGHT, currentColor * MAX_LIGHT);
     }*/
@@ -189,18 +237,51 @@ void main() {
     outputColor.xyz *= currentColor;
     /*if(isBiomeEnd) {
         outputColor.xyz = mix(outputColor, vec3(dot(outputColor, vec3(0.333))),0.5);*/
-    if(!isBiomeEnd) {
+    /*if(!isBiomeEnd) {
         outputColor.xyz = mix(outputColor,lightColor,0.125f);
-    }
+    }*/
 
+    //outputColor.xyz = mix(unreal(outputColor.xyz),aces(outputColor.xyz),0.95);
+    
     outputColor.xyz = mix(outputColor.xyz, vec3(0), blindness);
 
     /*if(timePhase < 3 && timePhase > 1) {
         outputColor.xyz *= vec3(0.75f);
     }*/
 
-    //outputColor.xyz = unreal(outputColor.xyz);
+    if(!isBiomeEnd) {
+        outputColor.xyz = mix(outputColor.xyz,unreal(outputColor.xyz),0.333f);   
+    } else {
+        outputColor.xyz = mix(outputColor.xyz, vec3(dot(outputColor.xyz, vec3(0.333f))), 1-dot(lightmapCoords.rg, vec2(0.333f)));
+    }
+
+    vec2 TexCoords2 = texCoord;
+    float Depth = texture2D(depthtex0, texCoord).r;
+    float Depth2 = texture2D(depthtex1, texCoord).r;
+    /*vec3 Albedo;
+    if(Depth != Depth2 && isWaterBlock > 0) {
+        #ifdef WATER_REFRACTION
+            vec4 noiseMap = texture2D(noise, texCoord + sin(texCoord.y*32f + ((frameCounter)/90f)*0.05f) * 0.001f);
+            vec4 noiseMap2 = texture2D(noise, texCoord - sin(texCoord.y*16f + ((frameCounter)/90f)*0.05f) * 0.001f);
+            vec4 finalNoise = mix(noiseMap,noiseMap2,0.5f);
+
+            TexCoords2 += finalNoise.xy * vec2(0.125f);
+        #endif
+
+        Albedo = pow(mix(texture2D(colortex0, TexCoords2).rgb,vec3(0.0f,0.33f,0.55f),clamp((0.5 - (Depth - Depth2)) * 0.5,0,1)), vec3(2.2f));
+        #ifdef WATER_FOAM
+            if(abs(Depth - Depth2) < 0.0005f) {
+                Albedo = mix(Albedo, vec3(1.0f), clamp(1 - abs(Depth - Depth2),0f,1));
+            }
+        #endif
+        outputColor = Albedo;
+    }*/
 
     outColor0 = vec4(pow(outputColor,vec3(1/2.2)), transparency);
     outColor2 = vec4(lightmapCoords, 0f, 1.0f);
+    if(Depth != Depth2 && isWaterBlock > 0) {
+        isWater = vec4(1);
+    } else {
+        isWater = vec4(0);
+    }
 }

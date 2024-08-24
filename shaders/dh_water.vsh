@@ -70,7 +70,7 @@ void main() {
 	TexCoords = gl_MultiTexCoord0.st;
 	Normal = vec4(normalize(gl_NormalMatrix * gl_Normal), 1.0f);
 	LightmapCoords = mat2(gl_TextureMatrix[1]) * gl_MultiTexCoord1.st;
-	if(mc_Entity.x == 8.0 || mc_Entity.x == 9.0) {
+	/*if(mc_Entity.x == 8.0 || mc_Entity.x == 9.0) {
 		float depth = texture2D(depthtex0, TexCoords).r;
 		vec3 ClipSpace = vec3(TexCoords, depth) * 2.0f - 1.0f;
 		vec4 ViewW = gbufferProjectionInverse * vec4(ClipSpace, 1.0f);
@@ -82,14 +82,14 @@ void main() {
 		waterDistortScreen = gbufferProjection * waterDistortScreen;
 		Normal.xy += waterDistortScreen.xy;
 
-		LightmapCoords += gl_Position.xy;
+		LightmapCoords += gl_Position.xy;*/
 		
 		isWaterBlock = 1;
 
 		//gl_Position.y /= ViewW.y;
-	} else {
+	/*} else {
 		isWaterBlock = 0;
-	}
+	}*/
 
 	//gl_Position.y += sin(((ViewW.x + worldTime/10.0f) + (ViewW.z + worldTime/5.0f) * (180.0f/PI))) * 0.25f;
 

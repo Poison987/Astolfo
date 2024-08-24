@@ -1,5 +1,8 @@
 #version 460 compatibility
 
+#define WATER_REFRACTION
+#define WATER_FOAM
+
 varying vec2 TexCoords;
 varying vec4 Normal;
 varying vec4 Color;
@@ -13,6 +16,8 @@ uniform sampler2D texture;
 uniform sampler2D gDepth;
 
 uniform sampler2D noise;
+
+uniform sampler2D colortex0;
 
 uniform sampler2D depthtex1;
 uniform sampler2D depthtex0;
@@ -76,8 +81,35 @@ void main() {
     //vec4 normalDefine = vec4(noiseMap.xyz * 0.5 + 0.5f, 1.0f);
     //normalDefine = normalDefine + noiseMap;
 
+    vec2 TexCoords2 = texCoord;
+    //float Depth = texture2D(depthtex0, texCoord).r;
+    //float Depth2 = texture2D(depthtex1, texCoord).r;
+    vec3 Albedo;
+    if(depth.r != depth2 && isWaterBlock > 0) {
+        #ifdef WATER_REFRACTION
+            vec4 noiseMap = texture2D(noise, texCoord + sin(texCoord.y*32f + ((frameCounter)/90f)*0.05f) * 0.001f);
+            vec4 noiseMap2 = texture2D(noise, texCoord - sin(texCoord.y*16f + ((frameCounter)/90f)*0.05f) * 0.001f);
+            vec4 finalNoise = mix(noiseMap,noiseMap2,0.5f);
+
+            TexCoords2 += finalNoise.xy * vec2(0.125f);
+        #endif
+
+        Albedo = pow(mix(texture2D(colortex0, TexCoords2).rgb,vec3(0.0f,0.33f,0.55f),clamp((0.5 - (depth.r - depth2)) * 0.5,0,1)), vec3(2.2f));
+        #ifdef WATER_FOAM
+            if(abs(depth.r - depth2) < 0.0005f) {
+                Albedo = mix(Albedo, vec3(1.0f), clamp(1 - abs(depth.r - depth2),0f,1));
+            }
+        #endif
+        albedo.xyz = Albedo;
+        albedo.a = mix(0.5f, 0.5f, clamp(1 - abs(depth.r - depth2),0f,1));
+    }
+
     gl_FragData[0] = albedo;
     gl_FragData[1] = Normal;
     gl_FragData[2] = vec4(LightmapCoords.x + Normal.x, LightmapCoords.x + noiseMap.y, LightmapCoords.y + noiseMap.z, 1.0f);
-    gl_FragData[3] = vec4(1.0);
+    if(depth != depth2 && isWaterBlock > 0) {
+        gl_FragData[3] = vec4(1.0);
+    } else {
+        gl_FragData[3] = vec4(0.0);
+    }
 }

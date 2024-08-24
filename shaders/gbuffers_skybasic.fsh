@@ -144,26 +144,26 @@ void main() {
         baseColorB = currentColorB;
     }*/
 
-    float dayNightLerp = clamp(quadTime/250,0,1);
-    float sunsetLerp = clamp((quadTime - 250)/250,0,1);
+    float dayNightLerp = clamp(quadTime/500,0,1);
+    float sunsetLerp = clamp((quadTime - 500)/500,0,1);
 
-    if(worldTime > 250 && worldTime <= 11750) {
+    if(worldTime > 500 && worldTime <= 11500) {
         //baseOutputColorModifier = vec3(DAY_I);
-        currentColorA = mix(transitionColorA,dayColorA,dayNightLerp);//mix(baseColorA,dayColorA,dayNightLerp);
+        currentColorA = dayColorA;//mix(baseColorA,dayColorA,dayNightLerp);
         currentColorB = mix(transitionColorB,dayColorB,dayNightLerp);//mix(baseColorB,dayColorB,dayNightLerp);
         //outputColor = mix(baseOutputColor, baseOutputColor * baseOutputColorModifier, mod(worldTime/6000f,2f));
         
-    } else if(worldTime > 11750 && worldTime <= 12250) {
-        currentColorA = mix(dayColorA, transitionColorA, sunsetLerp);
+    } else if(worldTime > 11500 && worldTime <= 12500) {
+        currentColorA = mix(dayColorA, nightColorA, sunsetLerp);
         currentColorB = mix(dayColorB, transitionColorB, sunsetLerp);
-    } else if((worldTime > 12250 && worldTime <= 23750)) {
+    } else if((worldTime > 12500 && worldTime <= 23500)) {
         //baseOutputColorModifier = vec3(NIGHT_I * 0.4f);
-        currentColorA = mix(transitionColorA,nightColorA,dayNightLerp);//mix(baseColorA, nightColorA, dayNightLerp);
+        currentColorA = nightColorA;//mix(baseColorA, nightColorA, dayNightLerp);
         currentColorB = mix(transitionColorB,nightColorB,dayNightLerp);//mix(baseColorB, nightColorB, dayNightLerp);
         //outputColor = mix(baseOutputColor, baseOutputColor * baseOutputColorModifier,mod(worldTime/6000f,2f));
-    } else if(worldTime > 23750 || worldTime <= 250) {
+    } else if(worldTime > 23500 || worldTime <= 500) {
         //baseOutputColorModifier = vec3(SUNSET_I);
-        currentColorA = mix(nightColorA, transitionColorA, sunsetLerp);
+        currentColorA = mix(nightColorA, dayColorA, sunsetLerp);
         currentColorB = mix(nightColorB, transitionColorB, sunsetLerp);
         //outputColor = mix(baseOutputColor, baseOutputColor * baseOutputColorModifier, mod(worldTime/6000f,2f));
     }

@@ -8,6 +8,13 @@ varying vec2 LightmapCoords;
 
 uniform sampler2D texture;
 
+uniform float blindness;
+
+in vec3 viewSpaceFragPosition;
+
+float minBlindnessDistance = 2.5;
+float maxBlindDistance = 5;
+
 /* DRAWBUFFERS: 0124 */
 
 void main() {
@@ -19,6 +26,12 @@ void main() {
         a = 1;
     } else {
         a = 0;
+    }
+
+    float distanceFromCamera = distance(vec3(0), viewSpaceFragPosition);
+
+    if(blindness > 0f) {
+        albedo.xyz = mix(albedo.xyz,vec3(0),(distanceFromCamera - minBlindnessDistance)/(maxBlindDistance - minBlindnessDistance) * blindness);
     }
 
     gl_FragData[0] = albedo;

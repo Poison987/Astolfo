@@ -84,7 +84,7 @@ void main() {
 
 		LightmapCoords += gl_Position.xy;*/
 		
-		isWaterBlock = 1;
+		//isWaterBlock = 1;
 
 		//gl_Position.y /= ViewW.y;
 	/*} else {

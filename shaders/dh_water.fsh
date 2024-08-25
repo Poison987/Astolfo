@@ -85,7 +85,8 @@ void main() {
     //float Depth = texture2D(depthtex0, texCoord).r;
     //float Depth2 = texture2D(depthtex1, texCoord).r;
     vec3 Albedo;
-    if(depth.r != depth2 && isWaterBlock > 0) {
+    float isBlockWater = float(Color.z > Color.y && Color.z > Color.x);
+    if(depth.r != depth2 && isBlockWater > 0) {
         #ifdef WATER_REFRACTION
             vec4 noiseMap = texture2D(noise, texCoord + sin(texCoord.y*32f + ((frameCounter)/90f)*0.05f) * 0.001f);
             vec4 noiseMap2 = texture2D(noise, texCoord - sin(texCoord.y*16f + ((frameCounter)/90f)*0.05f) * 0.001f);
@@ -107,7 +108,7 @@ void main() {
     gl_FragData[0] = albedo;
     gl_FragData[1] = Normal;
     gl_FragData[2] = vec4(LightmapCoords.x + Normal.x, LightmapCoords.x + noiseMap.y, LightmapCoords.y + noiseMap.z, 1.0f);
-    if(depth != depth2 && isWaterBlock > 0) {
+    if(depth != depth2 && isBlockWater > 0) {
         gl_FragData[3] = vec4(1.0);
     } else {
         gl_FragData[3] = vec4(0.0);

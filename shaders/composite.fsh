@@ -2,6 +2,7 @@
 #include "distort.glsl"
 #include "lib/commonFunctions.glsl"
 #include "lib/spaceConversion.glsl"
+#include "program/underwater.glsl"
 #define SHADOW_SAMPLES 2
 #define PI 3.14159265358979323846f
 #define DAY_R 1.0f // [0.5f 0.6f 0.7f 0.8f 0.9f 1.0f 1.1f 1.2f 1.3f 1.4f 1.5f]
@@ -398,11 +399,15 @@ void main() {
     float Depth = texture2D(depthtex0, TexCoords).r;
     float Depth2 = texture2D(depthtex1, TexCoords).r;
     vec3 Albedo;
+
+    vec4 noiseMap = texture2D(noise, TexCoords + sin(TexCoords.y*32f + ((frameCounter)/90f)*0.05f) * 0.001f);
+    vec4 noiseMap2 = texture2D(noise, TexCoords - sin(TexCoords.y*16f + ((frameCounter)/90f)*0.05f) * 0.001f);
+    vec4 finalNoise = mix(noiseMap,noiseMap2,0.5f);
+
+    vec4 noiseMap3 = texture2D(noise, TexCoords - sin(TexCoords.y*64f + ((frameCounter)/90f)) * 0.005f);
+
     if(waterTest > 0) {
         #ifdef WATER_REFRACTION
-            vec4 noiseMap = texture2D(noise, TexCoords + sin(TexCoords.y*32f + ((frameCounter)/90f)*0.05f) * 0.001f);
-            vec4 noiseMap2 = texture2D(noise, TexCoords - sin(TexCoords.y*16f + ((frameCounter)/90f)*0.05f) * 0.001f);
-            vec4 finalNoise = mix(noiseMap,noiseMap2,0.5f);
 
             TexCoords2 += finalNoise.xy * vec2(0.125f);
         #endif
@@ -414,7 +419,7 @@ void main() {
             }
         #endif
     } else {
-        Albedo = pow(texture2D(colortex0, TexCoords2).rgb, vec3(2.2f));
+        Albedo = pow(isInWater(colortex0, vec3(0.0f,0.33f,0.55f), TexCoords2, vec2(noiseMap3.x * 0.1,0), 0.25), vec3(2.2f));
     }
     vec3 Normal = normalize(texture2D(colortex1, TexCoords2).rgb * 2.0f -1.0f);
 

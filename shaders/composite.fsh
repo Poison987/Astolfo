@@ -538,9 +538,10 @@ void main() {
     float maxLight = MAX_LIGHT;
 
     if(isBiomeEnd) {
+        LightmapColor = pow(LightmapColor, vec3(2.55));
         Diffuse.xyz = mix(Albedo * ((mix(LightmapColor,vec3(dot(LightmapColor,vec3(0.333f))),0.75)*0.125 + NdotL * GetShadow(Depth) + Ambient) * currentColor),Albedo * ((NdotL * GetShadow(Depth) + Ambient) * currentColor),0.25);
         //Diffuse = mix(Diffuse, seColor, 0.01);
-        Diffuse = mix(Diffuse,vec3(dot(Diffuse,vec3(0.333f))),1.0625-clamp(vec3(dot(LightmapColor.rg,vec2(0.333f))),0.5,1));
+        Diffuse = mix(Diffuse,vec3(pow(dot(Diffuse,vec3(0.333f)),1/2.55) * 0.125f),1.0625-clamp(vec3(dot(LightmapColor.rg,vec2(0.333f))),0.5,1));
         Diffuse.xyz = mix(unreal(Diffuse.xyz),aces(Diffuse.xyz),0.95);
     } else {
         /*if(dot(LightmapColor,vec3(0.333)) > maxLight) {

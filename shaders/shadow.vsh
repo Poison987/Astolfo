@@ -1,4 +1,4 @@
-#version 120
+#version 460 compatibility
 #include "distort.glsl"
 
 #define ENTITY_SHADOWS

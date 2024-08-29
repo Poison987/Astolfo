@@ -1,4 +1,4 @@
-#version 120
+#version 460 compatibility
 #define PI 3.14159265358979323846f
 
 varying vec2 TexCoords;

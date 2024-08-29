@@ -1,4 +1,4 @@
-#version 120
+#version 460 compatibility
 #include "distort.glsl"
 #include "lib/commonFunctions.glsl"
 #include "lib/spaceConversion.glsl"

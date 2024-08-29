@@ -1,4 +1,4 @@
-#version 120
+#version 460 compatibility
 
 #include "program/underwater.glsl"
 

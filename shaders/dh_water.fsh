@@ -49,7 +49,9 @@ void main() {
     vec4 depth = texture2D(depthtex1, TexCoords);
     float depth2 = texture(depthtex0,texCoord).r;
 
-    if(depth2 != 1f) {
+    float discardDepth = 1f;
+
+    if(depth2 != discardDepth) {
         discard;
     }
 

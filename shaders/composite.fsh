@@ -429,7 +429,8 @@ void main() {
             TexCoords2 = TexCoords;
         }
         #ifdef WATER_FOAM
-            if(abs(Depth - Depth2) < 0.0005f) {
+            float isRain = texture2D(colortex3, TexCoords).r;
+            if(abs(Depth - Depth2) < 0.0005f && isRain == 0.0) {
                 Albedo = mix(Albedo, vec3(1.0f), clamp(1 - abs(Depth - Depth2),0f,1));
             }
         #endif

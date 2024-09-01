@@ -173,7 +173,7 @@ WavePixelData physics_wavePixel(const in vec2 position, const in float factor, c
     return data;
 }
 
-/* DRAWBUFFERS: 0125 */
+/* DRAWBUFFERS: 01235 */
 
 void main() {
     physics_waveData = physics_wavePixel(physics_localPosition.xz, physics_localWaviness, physics_iterationsNormal, physics_gameTime);
@@ -217,4 +217,5 @@ void main() {
     gl_FragData[1] = vec4(normalM,1);
     gl_FragData[2] = vec4(LightmapCoords.x + noiseMap.x, LightmapCoords.x + noiseMap.y, LightmapCoords.y + noiseMap.z, 1.0f);
     gl_FragData[3] = vec4(1.0);
+    gl_FragData[4] = vec4(1.0);
 }

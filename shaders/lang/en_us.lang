@@ -126,6 +126,8 @@ option.BLOOM_INTENSITY.comment=Brightness of Bloom effect
 option.WATER_REFRACTION=Water Refraction
 option.WATER_FOAM=Water Foam (§cExperimental§r)
 
+option.TILTED_RAIN=Tilted Rain
+
 screen.PERFORMANCE=Performance
 
 screen.SKY = Sky

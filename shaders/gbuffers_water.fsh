@@ -33,7 +33,7 @@ uniform float viewHeight;
 
 //attribute vec4 mc_Entity;
 
-/* DRAWBUFFERS:0125 */
+/* DRAWBUFFERS:01235 */
 
 void main() {
     //vec4 albedo = texture2D(texture, TexCoords) * Color;
@@ -75,5 +75,6 @@ void main() {
     gl_FragData[0] = albedo;
     gl_FragData[1] = Normal;
     gl_FragData[2] = Lightmap;
-    gl_FragData[3] = vec4(isWaterBlock);
+    gl_FragData[3] = vec4(1.0);
+    gl_FragData[4] = vec4(isWaterBlock);
 }
